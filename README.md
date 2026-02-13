@@ -6,6 +6,10 @@ Queremos avaliar sua compreensão de **renderização no lado do servidor (SSR)*
 
 Não se espera uma aplicação completa de produção, mas sim uma solução simples, clara e funcional.
 
+- Faça um fork do repositório do projeto.
+- Clone o repositório forkado para o seu ambiente local.
+- Quando finalizado, envie o link do repositório para jefferson@acheipneus.com.br.
+
 ---
 
 🎯 Objetivo do desafio
