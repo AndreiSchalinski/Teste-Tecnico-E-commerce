@@ -1,7 +1,12 @@
+"use client"
 
+import { Button, Container, Heading } from "@chakra-ui/react"
 
 export default function Home() {
   return (
-    <><h1>Olá..</h1></>
-  );
+    <Container py={10}>
+      <Heading mb={4}>Teste Chakra</Heading>
+      <Button colorScheme="blue">Funciona 🚀</Button>
+    </Container>
+  )
 }
