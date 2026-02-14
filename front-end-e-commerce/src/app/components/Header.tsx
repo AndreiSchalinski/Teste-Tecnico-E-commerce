@@ -5,9 +5,9 @@ import { InputText } from "primereact/inputtext";
 import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
 
-export default function TemplateDemo() {
+export default function Header() {
   const itemRenderer = (item: any) => (
-    <a className="flex align-items-center p-menuitem-link">
+    <a className="flex align-items-center p-menuitem-link" href={item.url}>
       <span className={item.icon} />
       <span className="mx-2">{item.label}</span>
       {item.badge && <Badge className="ml-auto" value={item.badge} />}
@@ -22,33 +22,45 @@ export default function TemplateDemo() {
     {
       label: "Home",
       icon: "pi pi-home",
+      url:"/",
     },
     {
-      label: "Produtos",
+      label: "Store",
       icon: "pi pi-star",
       items: [
+        {
+          label: "Todos as categorias",
+          icon: "pi pi-bolt",
+          shortcut: "⌘+S",
+          url:"/produtos",
+          template: itemRenderer,
+        },
         {
           label: "Roupas",
           icon: "pi pi-bolt",
           shortcut: "⌘+S",
+          url:"/produtos/roupas",
           template: itemRenderer,
         },
         {
           label: "Eletrônicos",
           icon: "pi pi-server",
           shortcut: "⌘+B",
+          url:"/produtos/eletronicos",
           template: itemRenderer,
         },
         {
           label: "Mobília",
           icon: "pi pi-pencil",
           shortcut: "⌘+U",
+          url:"/produtos/mobilia",
           template: itemRenderer,
         },
         {
           label: "Variados",
           icon: "pi pi-pencil",
           shortcut: "⌘+U",
+          url:"/produtos/variados",
           template: itemRenderer,
         },
       ],

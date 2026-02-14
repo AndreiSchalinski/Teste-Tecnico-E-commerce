@@ -1,7 +1,7 @@
 import { PageDetalheProdutoProps } from "@/types/interfaces";
 import { notFound } from "next/navigation";
 
-async function getProdutoById(categoria: string, id: string) {
+async function getProdutoById(id: string) {
   const produtosMock = [
     { id: "1", nome: "Produto A", descricao: "Descrição A", preco: 100 },
     { id: "2", nome: "Produto B", descricao: "Descrição B", preco: 200 },
@@ -17,7 +17,7 @@ async function getProdutoById(categoria: string, id: string) {
 export default async function ProdutoDetalhePage({ params }: PageDetalheProdutoProps) {
   const { categoria, id } = await params;
 
-  const produto = await getProdutoById(categoria, id);
+  const produto = await getProdutoById(id);
 
   if (!produto) {
     notFound();
