@@ -1,19 +1,17 @@
-async function getTodosProdutos() {
-  return [];
-}
+import { ProdutoProvider } from "@/context/produto.context";
+import ProdutosList from "./ProdutosList";
+import { ProdutoService } from "@/services/produto.service";
 
 export default async function TodosProdutosPage() {
-  const listProdutos = await getTodosProdutos();
+
+  const produtos = await ProdutoService.getAll();
 
   return (
     <>
-      <h1>Todos os produtos</h1>
-
-      <ul>
-        {listProdutos.map((item) => (
-          <li>{JSON.stringify(item)}</li>
-        ))}
-      </ul>
+      <ProdutoProvider initialProdutos={produtos}>
+        <h1>Todos os produtos</h1>
+        <ProdutosList/>
+      </ProdutoProvider>
     </>
   );
 }
