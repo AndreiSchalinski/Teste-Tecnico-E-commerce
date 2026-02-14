@@ -1,12 +1,17 @@
+
 "use client"
 
-import { Button, Container, Heading } from "@chakra-ui/react"
+import { useState } from "react";
+import { Calendar } from 'primereact/calendar';
+import { Nullable } from "primereact/ts-helpers";
 
-export default function Home() {
-  return (
-    <Container py={10}>
-      <Heading mb={4}>Teste Chakra</Heading>
-      <Button colorScheme="blue">Funciona 🚀</Button>
-    </Container>
-  )
+export default function BasicDemo() {
+    const [date, setDate] = useState<Nullable<Date>>(null);
+
+    return (
+        <div className="card flex justify-content-center">
+            <Calendar value={date} onChange={(e) => setDate(e.value)} />
+        </div>
+    )
 }
+        
