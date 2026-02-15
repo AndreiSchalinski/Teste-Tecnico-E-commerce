@@ -31,8 +31,6 @@ export default function Header() {
     </a>
   );
 
-  const changeShowSidebar = () => setShowSidebar(true);
-
   const items = [
     {
       label: "Home",

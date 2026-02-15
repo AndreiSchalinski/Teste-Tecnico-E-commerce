@@ -6,7 +6,7 @@ import { Produto } from "../types/interfaces";
 
 type ProdutoContextType = {
   produtos: Produto[];
-  groupedProdutos: Record<string, Produto[]>;
+  produtosAgrupados: Record<string, Produto[]>;
 };
 
 const ProdutoContext = createContext({} as ProdutoContextType);
@@ -20,7 +20,7 @@ export function ProdutoProvider({
 }) {
   const [produtos] = useState(initialProdutos);
 
-  const groupedProdutos = useMemo(() => {
+  const produtosAgrupados = useMemo(() => {
     return produtos.reduce<Record<string, Produto[]>>((acc, produto) => {
       const categoryName = produto.category.name;
 
@@ -39,7 +39,7 @@ export function ProdutoProvider({
   }, [produtos]);
 
   return (
-    <ProdutoContext.Provider value={{ produtos, groupedProdutos }}>
+    <ProdutoContext.Provider value={{ produtos, produtosAgrupados }}>
       {children}
     </ProdutoContext.Provider>
   );
