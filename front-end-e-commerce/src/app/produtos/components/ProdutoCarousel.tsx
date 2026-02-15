@@ -75,7 +75,7 @@ export default function ProdCarousel({ produtos }: any) {
 
   const handleAddProduto = (product: Product) => {
     adicionarProduto({
-      id: String(product.id),
+      id: product.id,
       name: product.title,
       price: product.price,
       image: product.images[0],
