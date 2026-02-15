@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; 
-import "primereact/resources/primereact.min.css";                 
-import "primeicons/primeicons.css";                               
-import "primeflex/primeflex.css";       
+import { CarrinhoProvider } from "../context/carrinho.context";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "primeflex/primeflex.css";
 import "../styles/globals.css";
 
 import Header from "./components/Header";
@@ -31,8 +32,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Header/>
-        {children}
+        <CarrinhoProvider>
+          <Header />
+          {children}
+        </CarrinhoProvider>
       </body>
     </html>
   );

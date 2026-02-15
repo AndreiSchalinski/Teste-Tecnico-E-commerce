@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import { Carousel, CarouselResponsiveOption } from "primereact/carousel";
 import { Tag } from "primereact/tag";
 import CarouselImage from "../../components/CarouselImage";
+import { useCarrinho } from "../../../context/carrinho.context";
 
 // interface Product {
 //   id: string;
@@ -29,7 +30,10 @@ export interface Product {
 }
 
 export default function ProdCarousel({ produtos }: any) {
+  const { adicionarProduto } = useCarrinho();
+
   const [products] = useState<Product[]>(produtos);
+
   const responsiveOptions: CarouselResponsiveOption[] = [
     {
       breakpoint: "1400px",
@@ -69,6 +73,15 @@ export default function ProdCarousel({ produtos }: any) {
     }
   };
 
+  const handleAddProduto = (product: Product) => {
+    adicionarProduto({
+      id: String(product.id),
+      name: product.title,
+      price: product.price,
+      image: product.images[0],
+    });
+  };
+
   const productTemplate = (product: Product) => {
     return (
       <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
@@ -92,6 +105,7 @@ export default function ProdCarousel({ produtos }: any) {
             <Button
               icon="pi pi-cart-plus"
               label="Comprar"
+              onClick={() => handleAddProduto(product)}
             />
           </div>
         </div>
