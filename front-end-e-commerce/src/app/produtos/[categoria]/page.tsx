@@ -9,7 +9,19 @@ const categoriaMap: Record<string, string> = {
   eletronicos: "electronics",
   mobilia: "furniture",
   calcados: "shoes",
-  variados: "miscellaneou",
+  variados: "miscellaneous",
+};
+
+const categoriaTitulo = (key: string): string => {
+  const listCategorias: Record<string, string> = {
+    roupas: "Roupas",
+    eletronicos: "Eletrônicos",
+    mobilia: "Mobílias",
+    calcados: "Calçados",
+    variados: "Variados",
+  };
+
+  return listCategorias[key] ?? "Categoria";
 };
 
 export default function CategoriaPage() {
@@ -26,15 +38,24 @@ export default function CategoriaPage() {
     (produto) => produto.category.slug === categoriaTraduzida,
   );
 
+  const tituloCategoria = (key: string) => {
+    const nome = categoriaTitulo(key);
+    return key === "variados" ? `Opções ${nome}` : `Opções de ${nome}`;
+  };
+
   return (
     <div>
-      <h1>Categoria: {categoria}</h1>
+      <h1 style={{ textAlign: "center", margin: "20px 0" }}>
+        {tituloCategoria(categoria as string)}
+      </h1>
 
-      {produtosFiltrados.length === 0 ? (
-        <p>Nenhum produto encontrado</p>
-      ) : (
-        <ProdutosTableView produtos={produtosFiltrados}></ProdutosTableView>
-      )}
+      <section style={{ width: "80%", margin: "auto" }}>
+        {produtosFiltrados.length === 0 ? (
+          <p>Nenhum produto encontrado</p>
+        ) : (
+          <ProdutosTableView produtos={produtosFiltrados}></ProdutosTableView>
+        )}
+      </section>
     </div>
   );
 }

@@ -65,6 +65,27 @@ export default function Header() {
           url: "/produtos/eletronicos",
           template: itemRenderer,
         },
+         {
+          label: "Mobília",
+          icon: "pi pi-pencil",
+          shortcut: "⌘+U",
+          url:"/produtos/mobilia",
+          template: itemRenderer,
+        },
+        {
+          label: "Calçados",
+          icon: "pi pi-pencil",
+          shortcut: "⌘+U",
+          url:"/produtos/calcados",
+          template: itemRenderer,
+        },
+        {
+          label: "Variados",
+          icon: "pi pi-pencil",
+          shortcut: "⌘+U",
+          url:"/produtos/variados",
+          template: itemRenderer,
+        },
       ],
     },
     {

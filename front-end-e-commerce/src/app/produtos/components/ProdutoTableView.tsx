@@ -96,7 +96,7 @@ export default function ProdutosTableView({produtos}:any) {
         value={products}
         listTemplate={listTemplate}
         paginator
-        rows={5}
+        rows={3}
       />
     </div>
   );
