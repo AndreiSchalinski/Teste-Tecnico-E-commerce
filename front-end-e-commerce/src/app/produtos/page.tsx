@@ -9,7 +9,7 @@ export default async function TodosProdutosPage() {
   return (
     <>
       <ProdutoProvider initialProdutos={produtos}>
-        <h1>Todos os produtos</h1>
+        <h1 style={{textAlign:'center', margin:"40px 0"}}>Todas as categorias</h1>
         <ProdutosList/>
       </ProdutoProvider>
     </>
