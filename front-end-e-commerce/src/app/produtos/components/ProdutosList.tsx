@@ -9,9 +9,9 @@ export default function ProdutosList() {
   return (
     <div>
       {Object.entries(groupedProdutos).map(([categoria, produtos]) => (
-        <section key={categoria}>
+        <section style={{width:'80%', margin:'auto'}} key={categoria}>
           <h2>{categoria}</h2>
-
+ 
           <ProdCarousel produtos={produtos}></ProdCarousel>
         </section>
       ))}
