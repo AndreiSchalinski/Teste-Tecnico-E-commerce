@@ -1,4 +1,5 @@
 import { Sidebar } from "primereact/sidebar";
+import CarrinhoDataView from "./DataView";
 
 export default function SidebarCarrinho({
   showSidebar,
@@ -12,9 +13,13 @@ export default function SidebarCarrinho({
       visible={showSidebar}
       position="right"
       onHide={() => setShowSidebar(false)}
+      style={{ width: "30rem" }}
     >
-      <h2>Right Sidebar</h2>
-      <p>Conteúdo do carrinho...</p>
+      <h2>Carinho de compras</h2>
+
+      <p>Todos os produtos adicionados</p>
+
+      <CarrinhoDataView />
     </Sidebar>
   );
 }

@@ -4,11 +4,11 @@ import { useProdutos } from "../../../context/produto.context";
 import ProdCarousel from "./ProdutoCarousel";
 
 export default function ProdutosList() {
-  const { groupedProdutos } = useProdutos();
+  const { produtosAgrupados } = useProdutos();
 
   return (
     <div>
-      {Object.entries(groupedProdutos).map(([categoria, produtos]) => (
+      {Object.entries(produtosAgrupados).map(([categoria, produtos]) => (
         <section style={{width:'80%', margin:'auto'}} key={categoria}>
           <h2>{categoria}</h2>
  

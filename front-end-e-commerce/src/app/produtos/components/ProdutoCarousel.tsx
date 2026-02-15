@@ -29,7 +29,7 @@ export interface Product {
 }
 
 export default function ProdCarousel({ produtos }: any) {
-  const [products, setProducts] = useState<Product[]>(produtos);
+  const [products] = useState<Product[]>(produtos);
   const responsiveOptions: CarouselResponsiveOption[] = [
     {
       breakpoint: "1400px",
