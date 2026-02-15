@@ -1,4 +1,4 @@
-import { PageDetalheProdutoProps } from "@/types/interfaces";
+import { PageDetalheProdutoProps } from "../../../../types/interfaces";
 import { notFound } from "next/navigation";
 
 async function getProdutoById(id: string) {
