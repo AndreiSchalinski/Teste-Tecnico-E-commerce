@@ -4,10 +4,22 @@ import { Menubar } from "primereact/menubar";
 import { InputText } from "primereact/inputtext";
 import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
+import SidebarCarrinho from "./Sidebar";
+import { useState } from "react";
 
 export default function Header() {
-  const itemRenderer = (item: any) => (
-    <a className="flex align-items-center p-menuitem-link" href={item.url}>
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+
+  const itemRenderer = (item: any, options: any) => (
+    <a
+      className="flex align-items-center p-menuitem-link"
+      href={item.url}
+      onClick={(e) => {
+        if (!item.url) {
+          e.preventDefault();
+        }
+      }}
+    >
       <span className={item.icon} />
       <span className="mx-2">{item.label}</span>
       {item.badge && <Badge className="ml-auto" value={item.badge} />}
@@ -18,56 +30,62 @@ export default function Header() {
       )}
     </a>
   );
+
+  const changeShowSidebar = () => setShowSidebar(true);
+
   const items = [
     {
       label: "Home",
       icon: "pi pi-home",
-      url:"/",
+      url: "/",
     },
     {
       label: "Store",
-      icon: "pi pi-star",
+      icon: "pi pi-shop",
       items: [
         {
           label: "Todos as categorias",
           icon: "pi pi-bolt",
           shortcut: "⌘+S",
-          url:"/produtos",
+          url: "/produtos",
           template: itemRenderer,
         },
         {
           label: "Roupas",
           icon: "pi pi-bolt",
           shortcut: "⌘+S",
-          url:"/produtos/roupas",
+          url: "/produtos/roupas",
           template: itemRenderer,
         },
         {
           label: "Eletrônicos",
           icon: "pi pi-server",
           shortcut: "⌘+B",
-          url:"/produtos/eletronicos",
+          url: "/produtos/eletronicos",
           template: itemRenderer,
         },
         {
           label: "Mobília",
           icon: "pi pi-pencil",
           shortcut: "⌘+U",
-          url:"/produtos/mobilia",
+          url: "/produtos/mobilia",
           template: itemRenderer,
         },
         {
           label: "Variados",
           icon: "pi pi-pencil",
           shortcut: "⌘+U",
-          url:"/produtos/variados",
+          url: "/produtos/variados",
           template: itemRenderer,
         },
       ],
     },
     {
       label: "Carrinho",
-      icon: "pi pi-search",
+      icon: "pi pi-cart-plus",
+      badge: 3,
+      command: () => setShowSidebar(true),
+      template: itemRenderer,
     },
   ];
 
@@ -92,6 +110,10 @@ export default function Header() {
   return (
     <div className="">
       <Menubar model={items} start={start} end={end} />
+      <SidebarCarrinho
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+      />
     </div>
   );
 }

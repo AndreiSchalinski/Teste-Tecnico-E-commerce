@@ -88,10 +88,10 @@ export default function ProdCarousel({ produtos }: any) {
             severity={getSeverity(product)}
           ></Tag>
           <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
-            <Button icon="pi pi-search" className="p-button p-button-rounded" />
+            {/* <Button icon="pi pi-search" className="p-button p-button-rounded" /> */}
             <Button
-              icon="pi pi-star-fill"
-              className="p-button-success p-button-rounded"
+              icon="pi pi-cart-plus"
+              label="Comprar"
             />
           </div>
         </div>
