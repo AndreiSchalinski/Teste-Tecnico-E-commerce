@@ -2,6 +2,7 @@
 
 import { useProdutos } from "../../../context/produto.context";
 import { useParams, notFound } from "next/navigation";
+import ProdutosTableView from "../components/ProdutoTableView";
 
 const categoriaMap: Record<string, string> = {
   roupas: "clothes",
@@ -32,11 +33,7 @@ export default function CategoriaPage() {
       {produtosFiltrados.length === 0 ? (
         <p>Nenhum produto encontrado</p>
       ) : (
-        produtosFiltrados.map((produto) => (
-          <div style={{ margin: "20px 0" }} key={produto.id}>
-            {JSON.stringify(produto)}
-          </div>
-        ))
+        <ProdutosTableView produtos={produtosFiltrados}></ProdutosTableView>
       )}
     </div>
   );
