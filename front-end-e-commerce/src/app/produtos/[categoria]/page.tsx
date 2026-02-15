@@ -1,41 +1,43 @@
-import { PageCategoriaProps } from "@/types/interfaces";
-import { notFound } from "next/navigation";
+"use client";
 
-async function getProdutosByCategoria(categoria: string) {
-  const categoriasValidas = ["roupas", "eletronicos", "mobilia", "variados"];
+import { useProdutos } from "../../../context/produto.context";
+import { useParams, notFound } from "next/navigation";
 
-  if (!categoriasValidas.includes(categoria)) {
-    return null;
-  }
+const categoriaMap: Record<string, string> = {
+  roupas: "clothes",
+  eletronicos: "electronics",
+  mobilia: "furniture",
+  calcados: "shoes",
+  variados: "miscellaneou",
+};
 
-  return [
-    { id: "1", nome: "Produto A", preco: 100 },
-    { id: "2", nome: "Produto B", preco: 200 },
-  ];
-}
+export default function CategoriaPage() {
+  const { categoria } = useParams();
+  const { produtos } = useProdutos();
 
-export default async function CategoriaPage({ params }: PageCategoriaProps) {
-  const { categoria } = await params;
+  if (!categoria) notFound();
 
-  const produtos = await getProdutosByCategoria(categoria);
+  const categoriaTraduzida = categoriaMap[categoria as string];
 
-  if (!produtos) {
-    notFound();
-  }
+  if (!categoriaTraduzida) notFound();
+
+  const produtosFiltrados = (produtos ?? []).filter(
+    (produto) => produto.category.slug === categoriaTraduzida,
+  );
 
   return (
     <div>
       <h1>Categoria: {categoria}</h1>
 
-      <ul>
-        {produtos.map((produto) => (
-          <li key={produto.id}>
-            <a href={`/produtos/${categoria}/${produto.id}`}>
-              {produto.nome} - R$ {produto.preco}
-            </a>
-          </li>
-        ))}
-      </ul>
+      {produtosFiltrados.length === 0 ? (
+        <p>Nenhum produto encontrado</p>
+      ) : (
+        produtosFiltrados.map((produto) => (
+          <div style={{ margin: "20px 0" }} key={produto.id}>
+            {JSON.stringify(produto)}
+          </div>
+        ))
+      )}
     </div>
   );
 }
