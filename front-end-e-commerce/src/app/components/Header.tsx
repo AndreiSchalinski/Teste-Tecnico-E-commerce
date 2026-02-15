@@ -1,28 +1,34 @@
 "use client";
 
 import { Menubar } from "primereact/menubar";
-import { InputText } from "primereact/inputtext";
 import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
 import SidebarCarrinho from "./Sidebar";
 import { useState } from "react";
+import { useCarrinho } from "../../context/carrinho.context";
 
 export default function Header() {
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
 
-  const itemRenderer = (item: any, options: any) => (
+  const { produtos } = useCarrinho();
+
+  const totalItens = produtos.length
+
+  const itemRenderer = (item: any) => (
     <a
       className="flex align-items-center p-menuitem-link"
       href={item.url}
       onClick={(e) => {
-        if (!item.url) {
-          e.preventDefault();
-        }
+        if (!item.url) e.preventDefault();
       }}
     >
       <span className={item.icon} />
       <span className="mx-2">{item.label}</span>
-      {item.badge && <Badge className="ml-auto" value={item.badge} />}
+
+      {item.badge > 0 && (
+        <Badge className="ml-auto" value={item.badge} />
+      )}
+
       {item.shortcut && (
         <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">
           {item.shortcut}
@@ -44,36 +50,19 @@ export default function Header() {
         {
           label: "Todos as categorias",
           icon: "pi pi-bolt",
-          shortcut: "⌘+S",
           url: "/produtos",
           template: itemRenderer,
         },
         {
           label: "Roupas",
           icon: "pi pi-bolt",
-          shortcut: "⌘+S",
           url: "/produtos/roupas",
           template: itemRenderer,
         },
         {
           label: "Eletrônicos",
           icon: "pi pi-server",
-          shortcut: "⌘+B",
           url: "/produtos/eletronicos",
-          template: itemRenderer,
-        },
-        {
-          label: "Mobília",
-          icon: "pi pi-pencil",
-          shortcut: "⌘+U",
-          url: "/produtos/mobilia",
-          template: itemRenderer,
-        },
-        {
-          label: "Variados",
-          icon: "pi pi-pencil",
-          shortcut: "⌘+U",
-          url: "/produtos/variados",
           template: itemRenderer,
         },
       ],
@@ -81,7 +70,7 @@ export default function Header() {
     {
       label: "Carrinho",
       icon: "pi pi-cart-plus",
-      badge: 3,
+      badge: totalItens,
       command: () => setShowSidebar(true),
       template: itemRenderer,
     },
@@ -93,11 +82,11 @@ export default function Header() {
       src="https://primefaces.org/cdn/primereact/images/logo.png"
       height="40"
       className="mr-2"
-    ></img>
+    />
   );
+
   const end = (
     <div className="flex align-items-center gap-2">
-      {/* <InputText placeholder="Search" type="text" className="w-8rem sm:w-auto" /> */}
       <Avatar
         image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png"
         shape="circle"
@@ -106,12 +95,12 @@ export default function Header() {
   );
 
   return (
-    <div className="">
+    <>
       <Menubar model={items} start={start} end={end} />
       <SidebarCarrinho
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
       />
-    </div>
+    </>
   );
 }
