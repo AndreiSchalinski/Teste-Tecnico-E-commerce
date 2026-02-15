@@ -5,6 +5,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";                               
 import "primeflex/primeflex.css";       
 import "../styles/globals.css";
+
 import Header from "./components/Header";
 
 const geistSans = Geist({
