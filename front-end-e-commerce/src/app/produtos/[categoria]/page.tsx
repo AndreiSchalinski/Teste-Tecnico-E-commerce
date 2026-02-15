@@ -35,7 +35,9 @@ export default function CategoriaPage() {
   if (!categoriaTraduzida) notFound();
 
   const produtosFiltrados = (produtos ?? []).filter(
-    (produto) => produto.category.slug === categoriaTraduzida,
+    (produto) =>
+      produto.category.slug === categoriaTraduzida &&
+      ![53, 55, 56].includes(produto.id),
   );
 
   const tituloCategoria = (key: string) => {
