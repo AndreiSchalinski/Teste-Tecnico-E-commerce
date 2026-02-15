@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://api.escuelajs.co/api/v1"
+const url = "/"
 
 export const api = axios.create({
   baseURL: url,

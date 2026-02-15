@@ -1,9 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+
+import { Produto } from "../types/interfaces";
 
 type ProdutoContextType = {
-  produtos: any[]; //montar a interface ainda
+  produtos: Produto[];
+  groupedProdutos: Record<string, Produto[]>;
 };
 
 const ProdutoContext = createContext({} as ProdutoContextType);
@@ -13,12 +16,26 @@ export function ProdutoProvider({
   initialProdutos,
 }: {
   children: ReactNode;
-  initialProdutos: any[];
+  initialProdutos: Produto[];
 }) {
   const [produtos] = useState(initialProdutos);
 
+  const groupedProdutos = useMemo(() => {
+    return produtos.reduce<Record<string, Produto[]>>((acc, produto) => {
+      const categoryName = produto.category.name;
+
+      if (!acc[categoryName]) {
+        acc[categoryName] = [];
+      }
+
+      acc[categoryName].push(produto);
+
+      return acc;
+    }, {});
+  }, [produtos]);
+
   return (
-    <ProdutoContext.Provider value={{ produtos }}>
+    <ProdutoContext.Provider value={{ produtos, groupedProdutos }}>
       {children}
     </ProdutoContext.Provider>
   );

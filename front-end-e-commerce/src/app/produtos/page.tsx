@@ -1,6 +1,6 @@
-import { ProdutoProvider } from "@/context/produto.context";
-import ProdutosList from "./ProdutosList";
-import { ProdutoService } from "@/services/produto.service";
+import { ProdutoProvider } from "../../context/produto.context";
+import ProdutosList from "./components/ProdutosList";
+import { ProdutoService } from "../../services/produto.service";
 
 export default async function TodosProdutosPage() {
 
