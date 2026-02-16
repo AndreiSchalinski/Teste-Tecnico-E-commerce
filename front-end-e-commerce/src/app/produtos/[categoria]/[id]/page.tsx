@@ -1,23 +1,15 @@
-import { PageDetalheProdutoProps } from "../../../../types/interfaces";
-import { notFound } from "next/navigation";
+"use client";
 
-async function getProdutoById(id: string) {
-  const produtosMock = [
-    { id: '3', nome: "Produto A", descricao: "Descrição A", preco: 100 },
-    { id: '4', nome: "Produto B", descricao: "Descrição B", preco: 200 },
-  ];
+import { useProdutos } from "../../../../context/produto.context";
+import { useParams, notFound } from "next/navigation";
 
-  const produto = produtosMock.find((p) => p.id === id);
+export default function ProdutoDetalhePage() {
+  const { categoria, id } = useParams();
+  const { produtos } = useProdutos();
 
-  if (!produto) return null;
-
-  return produto;
-}
-
-export default async function ProdutoDetalhePage({ params }: PageDetalheProdutoProps) {
-  const { categoria, id } = await params;
-
-  const produto = await getProdutoById(id);
+  const produto = produtos.find(
+    (p) => p.id === Number(id)
+  );
 
   if (!produto) {
     notFound();
@@ -25,9 +17,9 @@ export default async function ProdutoDetalhePage({ params }: PageDetalheProdutoP
 
   return (
     <div>
-      <h1>{produto.nome}</h1>
-      <p>{produto.descricao}</p>
-      <strong>R$ {produto.preco}</strong>
+      <h1>{produto.title}</h1>
+      <p>{produto.description}</p>
+      <strong>R$ {produto.price}</strong>
 
       <br />
       <a href={`/produtos/${categoria}`}>← Voltar</a>
