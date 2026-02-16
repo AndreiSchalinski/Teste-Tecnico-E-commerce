@@ -65,11 +65,17 @@ export default function ProdutosTableView({ produtos }: any) {
               <div className="flex align-items-center gap-2">
                 <i className="pi pi-tag"></i>
                 <span className="font-semibold">{product.category.name}</span>
+                <span className="text-2xl font-semibold">${product.price}</span>
               </div>
             </div>
 
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span className="text-2xl font-semibold">${product.price}</span>
+              
+              <Button
+                icon="pi pi-search"
+                className="p-button-rounded"
+                onClick={() => handleAddProduto(product)}
+              />
 
               <Button
                 icon="pi pi-shopping-cart"
