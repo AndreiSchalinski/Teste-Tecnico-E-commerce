@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useProdutos } from "../../../context/produto.context";
-import ProdCarousel from "./ProdutoCarousel";
+import CarouselSwipper from "@/app/components/Carousel";
+import { useProdutos } from "@/context/produto.context";
 
 export default function ProdutosList() {
   const { produtosAgrupados } = useProdutos();
@@ -9,10 +9,9 @@ export default function ProdutosList() {
   return (
     <div>
       {Object.entries(produtosAgrupados).map(([categoria, produtos]) => (
-        <section style={{width:'80%', margin:'auto'}} key={categoria}>
+        <section style={{ width: "80%", margin: "auto" }} key={categoria}>
           <h2>{categoria}</h2>
- 
-          <ProdCarousel produtos={produtos}></ProdCarousel>
+          <CarouselSwipper slides={produtos} />
         </section>
       ))}
     </div>
