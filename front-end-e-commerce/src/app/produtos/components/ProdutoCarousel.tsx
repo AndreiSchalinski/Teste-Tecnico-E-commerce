@@ -1,22 +1,18 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "primereact/button";
 import { Carousel, CarouselResponsiveOption } from "primereact/carousel";
 import { Tag } from "primereact/tag";
 import CarouselImage from "../../components/CarouselImage";
 import { useCarrinho } from "../../../context/carrinho.context";
+import { useRouter } from "next/navigation";
 
-// interface Product {
-//   id: string;
-//   code: string;
-//   name: string;
-//   description: string;
-//   image: string;
-//   price: number;
-//   category: string;
-//   quantity: number;
-//   inventoryStatus: string;
-//   rating: number;
-// }
+export interface Categoria {
+  id: number;
+  name: string;
+  slug: string;
+}
 
 export interface Product {
   id: number;
@@ -24,12 +20,15 @@ export interface Product {
   slug: string;
   price: number;
   description: string;
+  category: Categoria;
   image: string;
   images: any[];
   inventoryStatus: string;
 }
 
 export default function ProdCarousel({ produtos }: any) {
+  const router = useRouter();
+
   const { adicionarProduto } = useCarrinho();
 
   const [products] = useState<Product[]>(produtos);
@@ -73,6 +72,22 @@ export default function ProdCarousel({ produtos }: any) {
     }
   };
 
+  const handleNavegacao = (product: Product) => {
+    const slugMap: Record<string, string> = {
+      clothes: "roupas",
+      electronics: "eletronicos",
+      furniture: "mobilia",
+      shoes: "calcados",
+      miscellaneous: "variados",
+    };
+
+    const categoriaTraduzida = slugMap[product.category.slug];
+
+    if (!categoriaTraduzida) return;
+
+    router.push(`/produtos/${categoriaTraduzida}/${product.id}`);
+  };
+
   const handleAddProduto = (product: Product) => {
     adicionarProduto({
       id: product.id,
@@ -101,11 +116,15 @@ export default function ProdCarousel({ produtos }: any) {
             severity={getSeverity(product)}
           ></Tag>
           <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
-            {/* <Button icon="pi pi-search" className="p-button p-button-rounded" /> */}
             <Button
               icon="pi pi-cart-plus"
-              label="Comprar"
+              className="p-button p-button-rounded"
               onClick={() => handleAddProduto(product)}
+            />
+            <Button
+              icon="pi pi-search"
+              className="p-button p-button-rounded"
+              onClick={() => handleNavegacao(product)}
             />
           </div>
         </div>

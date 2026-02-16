@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 
 async function getProdutoById(id: string) {
   const produtosMock = [
-    { id: "1", nome: "Produto A", descricao: "Descrição A", preco: 100 },
-    { id: "2", nome: "Produto B", descricao: "Descrição B", preco: 200 },
+    { id: '3', nome: "Produto A", descricao: "Descrição A", preco: 100 },
+    { id: '4', nome: "Produto B", descricao: "Descrição B", preco: 200 },
   ];
 
   const produto = produtosMock.find((p) => p.id === id);
