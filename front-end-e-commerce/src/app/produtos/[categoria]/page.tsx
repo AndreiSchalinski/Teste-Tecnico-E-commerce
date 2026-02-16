@@ -55,7 +55,10 @@ export default function CategoriaPage() {
         {produtosFiltrados.length === 0 ? (
           <p>Nenhum produto encontrado</p>
         ) : (
-          <ProdutosTableView produtos={produtosFiltrados}></ProdutosTableView>
+          <ProdutosTableView
+            produtos={produtosFiltrados}
+            modo="list"
+          ></ProdutosTableView>
         )}
       </section>
     </div>

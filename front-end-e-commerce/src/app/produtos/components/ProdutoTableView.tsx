@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { DataView } from "primereact/dataview";
 import { classNames } from "primereact/utils";
 import { useCarrinho } from "../../../context/carrinho.context";
+import { useRouter } from "next/navigation";
 
 interface Category {
   id: number;
@@ -27,7 +28,18 @@ interface Produto {
   updatedAt: string;
 }
 
-export default function ProdutosTableView({ produtos }: any) {
+interface ProdutosTableViewProps {
+  produtos: Produto[];
+  modo?: "single" | "list";
+}
+
+export default function ProdutosTableView({
+  produtos,
+  modo = "list",
+}: ProdutosTableViewProps) {
+
+  const router = useRouter();
+
   const { adicionarProduto } = useCarrinho();
 
   const [products] = useState<Produto[]>(produtos);
@@ -41,13 +53,29 @@ export default function ProdutosTableView({ produtos }: any) {
     });
   };
 
+  const handleNavegacao = (product: Produto) => {
+      const slugMap: Record<string, string> = {
+        clothes: "roupas",
+        electronics: "eletronicos",
+        furniture: "mobilia",
+        shoes: "calcados",
+        miscellaneous: "variados",
+      };
+  
+      const categoriaTraduzida = slugMap[product.category.slug];
+  
+      if (!categoriaTraduzida) return;
+  
+      router.push(`/produtos/${categoriaTraduzida}/${product.id}`);
+    };
+
   const itemTemplate = (product: Produto, index: number) => {
     return (
       <div className="col-12" key={product.id}>
         <div
           className={classNames(
             "flex flex-column xl:flex-row xl:align-items-start p-4 gap-4",
-            { "border-top-1 surface-border": index !== 0 },
+            { "border-top-1 surface-border": index !== 0 }
           )}
         >
           <img
@@ -57,24 +85,31 @@ export default function ProdutosTableView({ produtos }: any) {
           />
 
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div className="text-2xl font-bold text-900">{product.title} - {product.id}</div>
+            <div className="flex flex-column gap-3">
+              <div className="text-2xl font-bold text-900">
+                {product.title}
+              </div>
 
-              <div className="text-600 text-sm">{product.description}</div>
+              <div className="text-600 text-sm">
+                {product.description}
+              </div>
 
               <div className="flex align-items-center gap-2">
                 <i className="pi pi-tag"></i>
-                <span className="font-semibold">{product.category.name}</span>
-                <span className="text-2xl font-semibold">${product.price}</span>
+                <span className="font-semibold">
+                  {product.category.name}
+                </span>
+                <span className="text-2xl font-semibold">
+                  ${product.price}
+                </span>
               </div>
             </div>
 
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              
+            <div className="flex sm:flex-column gap-3">
               <Button
                 icon="pi pi-search"
                 className="p-button-rounded"
-                onClick={() => handleAddProduto(product)}
+                onClick={() => handleNavegacao(product)}
               />
 
               <Button
@@ -94,7 +129,9 @@ export default function ProdutosTableView({ produtos }: any) {
 
     return (
       <div className="grid grid-nogutter">
-        {items.map((product, index) => itemTemplate(product, index))}
+        {items.map((product, index) =>
+          itemTemplate(product, index)
+        )}
       </div>
     );
   };
@@ -104,8 +141,8 @@ export default function ProdutosTableView({ produtos }: any) {
       <DataView
         value={products}
         listTemplate={listTemplate}
-        paginator
-        rows={3}
+        paginator={modo === "list"}
+        rows={modo === "list" ? 3 : undefined}
       />
     </div>
   );
