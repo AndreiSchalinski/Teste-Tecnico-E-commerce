@@ -15,6 +15,6 @@ export default function ProdutoDetalhePage() {
   }
 
   return (
-    <ProdutosTableView produtos={[produto]} modo="single"></ProdutosTableView>
+    <ProdutosTableView produto={produto}></ProdutosTableView>
   );
 }

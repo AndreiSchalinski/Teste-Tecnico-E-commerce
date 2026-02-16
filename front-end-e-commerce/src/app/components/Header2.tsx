@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link"; // Se usar React Router, mude para: import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   AppBar,
   Box,
@@ -16,17 +16,14 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  Badge,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-
-// Definição das rotas
-const pages = [
-  { name: "Home", path: "/" },
-  { name: "Carrinho", path: "/carrinho" },
-];
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCarrinho } from "@/context/carrinho.context";
 
 const storeItems = [
   { name: "Todas as categorias", path: "/produtos" },
@@ -38,6 +35,10 @@ const storeItems = [
 ];
 
 function ResponsiveAppBar() {
+  const { produtos } = useCarrinho();
+  
+  const totalItens = produtos?.length || 0;
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElStore, setAnchorElStore] = useState<null | HTMLElement>(null);
   const [openMobileStore, setOpenMobileStore] = useState(false);
@@ -51,19 +52,11 @@ function ResponsiveAppBar() {
   const handleOpenStoreMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorElStore(event.currentTarget);
   const handleCloseStoreMenu = () => setAnchorElStore(null);
 
-  const menuProps = {
-    disableScrollLock: true,
-    slotProps: {
-      backdrop: { sx: { backgroundColor: "transparent" } },
-    },
-  };
-
   return (
     <>
       <AppBar position="fixed" elevation={2} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            {/* LOGO DESKTOP */}
             <Typography
               variant="h6"
               noWrap
@@ -72,16 +65,14 @@ function ResponsiveAppBar() {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
                 fontWeight: 700,
                 color: "inherit",
                 textDecoration: "none",
               }}
             >
-              <AdbIcon sx={{ mr: 1 }} /> LOGO
+              <AdbIcon sx={{ mr: 1 }} /> MINHA LOJA
             </Typography>
 
-            {/* MENU MOBILE */}
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
                 <MenuIcon />
@@ -90,40 +81,29 @@ function ResponsiveAppBar() {
                 anchorEl={anchorElNav}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
-                {...menuProps}
+                disableScrollLock
               >
-                <MenuItem component={Link} href="/" onClick={handleCloseNavMenu}>
-                  Home
-                </MenuItem>
+                <MenuItem component={Link} href="/" onClick={handleCloseNavMenu}>Home</MenuItem>
                 
                 <MenuItem onClick={() => setOpenMobileStore(!openMobileStore)}>
-                  <ListItemText primary="Store" />
+                  <ListItemText primary="Categorias" />
                   {openMobileStore ? <ExpandLess /> : <ExpandMore />}
                 </MenuItem>
                 
                 <Collapse in={openMobileStore} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding sx={{ bgcolor: 'rgba(0,0,0,0.04)' }}>
                     {storeItems.map((item) => (
-                      <ListItemButton 
-                        key={item.name} 
-                        component={Link} 
-                        href={item.path} 
-                        sx={{ pl: 4 }} 
-                        onClick={handleCloseNavMenu}
-                      >
+                      <ListItemButton key={item.name} component={Link} href={item.path} onClick={handleCloseNavMenu} sx={{ pl: 4 }}>
                         <ListItemText primary={item.name} />
                       </ListItemButton>
                     ))}
                   </List>
                 </Collapse>
 
-                <MenuItem component={Link} href="/carrinho" onClick={handleCloseNavMenu}>
-                  Carrinho
-                </MenuItem>
+                <MenuItem component={Link} href="/carrinho" onClick={handleCloseNavMenu}>Carrinho</MenuItem>
               </Menu>
             </Box>
 
-            {/* LOGO MOBILE */}
             <Typography
               variant="h5"
               noWrap
@@ -132,23 +112,21 @@ function ResponsiveAppBar() {
               sx={{
                 flexGrow: 1,
                 display: { xs: "flex", md: "none" },
-                fontFamily: "monospace",
                 fontWeight: 700,
                 color: "inherit",
                 textDecoration: "none",
               }}
             >
-              <AdbIcon sx={{ mr: 1 }} /> LOGO
+              LOJA
             </Typography>
 
-            {/* MENU DESKTOP */}
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 1 }}>
-              <Button component={Link} href="/" sx={{ my: 2, color: "white" }}>
+              <Button component={Link} href="/" sx={{ my: 2, color: "white", textTransform: 'none' }}>
                 Home
               </Button>
 
               <Button
-                sx={{ my: 2, color: "white" }}
+                sx={{ my: 2, color: "white", textTransform: 'none' }}
                 onClick={handleOpenStoreMenu}
                 endIcon={<ExpandMore />}
               >
@@ -159,31 +137,38 @@ function ResponsiveAppBar() {
                 anchorEl={anchorElStore}
                 open={Boolean(anchorElStore)}
                 onClose={handleCloseStoreMenu}
-                {...menuProps}
                 anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                disableScrollLock
               >
                 {storeItems.map((item) => (
-                  <MenuItem 
-                    key={item.name} 
-                    component={Link} 
-                    href={item.path} 
-                    onClick={handleCloseStoreMenu}
-                    sx={{ minWidth: 160 }}
-                  >
+                  <MenuItem key={item.name} component={Link} href={item.path} onClick={handleCloseStoreMenu}>
                     {item.name}
                   </MenuItem>
                 ))}
               </Menu>
-
-              <Button component={Link} href="/carrinho" sx={{ my: 2, color: "white" }}>
-                Carrinho
-              </Button>
             </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton 
+                component={Link} 
+                href="/carrinho" 
+                color="inherit"
+                sx={{ ml: 2 }}
+              >
+                <Badge 
+                  badgeContent={totalItens} 
+                  color="secondary"
+                  showZero={false}
+                >
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Box>
+
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Espaçador para o AppBar Fixed */}
       <Toolbar />
     </>
   );

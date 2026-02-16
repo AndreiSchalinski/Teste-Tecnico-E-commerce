@@ -3,6 +3,7 @@
 import { useProdutos } from "../../../context/produto.context";
 import { useParams, notFound } from "next/navigation";
 import ProdutosTableView from "../components/ProdutoTableView";
+import ProdutosGrid from "../components/ProdutosGrid";
 
 const categoriaMap: Record<string, string> = {
   roupas: "clothes",
@@ -47,18 +48,15 @@ export default function CategoriaPage() {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center", margin: "20px 0" }}>
+      <h1 style={{ textAlign: "center", margin: "40px 0" }}>
         {tituloCategoria(categoria as string)}
       </h1>
 
-      <section style={{ width: "80%", margin: "auto" }}>
+      <section style={{ width: "90%", margin: "auto" }}>
         {produtosFiltrados.length === 0 ? (
-          <p>Nenhum produto encontrado</p>
+          <p style={{ textAlign: 'center' }}>Nenhum produto encontrado</p>
         ) : (
-          <ProdutosTableView
-            produtos={produtosFiltrados}
-            modo="list"
-          ></ProdutosTableView>
+          <ProdutosGrid produtos={produtosFiltrados} />
         )}
       </section>
     </div>

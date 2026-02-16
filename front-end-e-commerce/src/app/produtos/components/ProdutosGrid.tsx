@@ -1,53 +1,39 @@
 "use client";
 
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import { useRouter } from "next/navigation";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
 import {
+  Box,
+  Grid,
   Card,
   CardContent,
   Typography,
-  Box,
   Chip,
   Button,
   Stack,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CarouselIMG from "./CarouselImg";
 import { useCarrinho } from "@/context/carrinho.context";
+import { useRouter } from "next/navigation";
+import CarouselIMG from "@/app/components/CarouselImg";
 
-export interface Categoria {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-interface Product {
+interface Produto {
   id: number;
   title: string;
-  slug: string;
   price: number;
   description: string;
-  category: Categoria;
+  category: { name: string; slug: string };
   images?: string[];
 }
 
-interface CarouselProps {
-  slides: Product[];
+interface ProdutosGridProps {
+  produtos: Produto[];
 }
 
-const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
+export default function ProdutosGrid({ produtos = [] }: ProdutosGridProps) {
   const { adicionarProduto } = useCarrinho();
   const router = useRouter();
 
-  const handleAddProduto = (product: Product) => {
+  const handleAddProduto = (product: Produto) => {
     adicionarProduto({
       id: product.id,
       name: product.title,
@@ -56,7 +42,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
     });
   };
 
-  const handleNavegacao = (product: Product) => {
+  const handleNavegacao = (product: Produto) => {
     const slugMap: Record<string, string> = {
       clothes: "roupas",
       electronics: "eletronicos",
@@ -71,46 +57,13 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        py: 4,
-        px: { xs: 2, md: 4 },
-        "& .swiper-button-next, & .swiper-button-prev": {
-          color: "primary.main",
-          transform: "scale(0.7)",
-          bgcolor: "rgba(255, 255, 255, 0.8)",
-          width: 50,
-          height: 50,
-          borderRadius: "50%",
-          boxShadow: 2,
-          "&:hover": { bgcolor: "#fff" },
-        },
-        "& .swiper-pagination-bullet-active": {
-          backgroundColor: "primary.main",
-        },
-      }}
-    >
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={25}
-        slidesPerView={1}
-        navigation
-        pagination={{ clickable: true, dynamicBullets: true }}
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
-        loop
-        breakpoints={{
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1200: { slidesPerView: 3 },
-          1536: { slidesPerView: 4 },
-        }}
-        style={{ paddingBottom: "50px" }}
-      >
-        {slides.map((slide) => (
-          <SwiperSlide
-            key={slide.id}
-            style={{ display: "flex", height: "auto" }}
+    <Box sx={{ flexGrow: 1, pb: 8 }}>
+      <Grid container spacing={3}>
+        {produtos?.map((produto) => (
+          <Grid
+            size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+            key={produto.id}
+            sx={{ display: "flex" }}
           >
             <Card
               sx={{
@@ -128,9 +81,9 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
               <Box
                 sx={{ position: "relative", height: 250, overflow: "hidden" }}
               >
-                <CarouselIMG images={slide.images || []} />
+                <CarouselIMG images={produto.images || []} />
                 <Chip
-                  label={slide.category.name}
+                  label={produto.category.name}
                   size="small"
                   color="primary"
                   sx={{
@@ -162,7 +115,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                     WebkitBoxOrient: "vertical",
                   }}
                 >
-                  {slide.title}
+                  {produto.title}
                 </Typography>
 
                 <Typography
@@ -177,7 +130,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                     minHeight: "3em",
                   }}
                 >
-                  {slide.description}
+                  {produto.description}
                 </Typography>
 
                 <Box
@@ -194,7 +147,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                     color="text.primary"
                     sx={{ fontWeight: 800 }}
                   >
-                    ${slide.price}
+                    ${produto.price}
                   </Typography>
 
                   <Stack direction="row" spacing={1}>
@@ -202,7 +155,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                       variant="outlined"
                       size="small"
                       fullWidth
-                      onClick={() => handleNavegacao(slide)}
+                      onClick={() => handleNavegacao(produto)}
                       sx={{
                         borderRadius: 2,
                         textTransform: "none",
@@ -220,7 +173,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                       variant="contained"
                       size="small"
                       fullWidth
-                      onClick={() => handleAddProduto(slide)}
+                      onClick={() => handleAddProduto(produto)}
                       sx={{
                         borderRadius: 2,
                         textTransform: "none",
@@ -236,7 +189,11 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                             "linear-gradient(45deg, #2c3e50 30%, #000000 90%)",
                         },
                       }}
-                      startIcon={<AddShoppingCartIcon fontSize="small" />}
+                      startIcon={
+                        <AddShoppingCartIcon
+                          sx={{ fontSize: "1rem !important" }}
+                        />
+                      }
                     >
                       Add
                     </Button>
@@ -244,11 +201,9 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
                 </Box>
               </CardContent>
             </Card>
-          </SwiperSlide>
+          </Grid>
         ))}
-      </Swiper>
+      </Grid>
     </Box>
   );
-};
-
-export default CarouselSwipper;
+}
