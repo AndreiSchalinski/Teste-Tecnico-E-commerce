@@ -1,89 +1,89 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { Snackbar, Alert, AlertColor } from "@mui/material";
 
-type Produto = {
+interface Produto {
   id: number;
   name: string;
   price: number;
-  image?: string;
+  image: string;
   quantity: number;
-};
+}
 
-type CarrinhoContextType = {
+interface CarrinhoContextData {
   produtos: Produto[];
   adicionarProduto: (produto: Omit<Produto, "quantity">) => void;
   removerProduto: (id: number) => void;
   aumentarQuantidade: (id: number) => void;
   diminuirQuantidade: (id: number) => void;
-  limparCarrinho: () => void;
   total: number;
-};
+}
 
-const CarrinhoContext = createContext<CarrinhoContextType | null>(null);
+const CarrinhoContext = createContext<CarrinhoContextData>({} as CarrinhoContextData);
 
-export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
+export const CarrinhoProvider = ({ children }: { children: ReactNode }) => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success" as AlertColor,
+  });
 
-  useEffect(() => {
-    const carrinhoSalvo = localStorage.getItem("carrinho");
-    if (carrinhoSalvo) {
-      setProdutos(JSON.parse(carrinhoSalvo));
-    }
-  }, []);
+  const showMessage = (msg: string, sev: AlertColor = "success") => {
+    setToast({ open: true, message: msg, severity: sev });
+  };
 
-  useEffect(() => {
-    localStorage.setItem("carrinho", JSON.stringify(produtos));
-  }, [produtos]);
+  const handleCloseToast = () => {
+    setToast((prev) => ({ ...prev, open: false }));
+  };
 
-  function adicionarProduto(produto: Omit<Produto, "quantity">) {
+  const adicionarProduto = (novoProduto: Omit<Produto, "quantity">) => {
     setProdutos((prev) => {
-      const existente = prev.find((p) => p.id === produto.id);
-
-      if (existente) {
+      const existe = prev.find((p) => p.id === novoProduto.id);
+      if (existe) {
+        showMessage(`Quantidade de ${novoProduto.name} atualizada!`, "info");
         return prev.map((p) =>
-          p.id === produto.id
-            ? { ...p, quantity: p.quantity + 1 }
-            : p
+          p.id === novoProduto.id ? { ...p, quantity: p.quantity + 1 } : p
         );
       }
-
-      return [...prev, { ...produto, quantity: 1 }];
+      showMessage(`${novoProduto.name} adicionado ao carrinho!`, "success");
+      return [...prev, { ...novoProduto, quantity: 1 }];
     });
-  }
+  };
 
-  function removerProduto(id: number) {
+  const removerProduto = (id: number) => {
+    const produto = produtos.find(p => p.id === id);
     setProdutos((prev) => prev.filter((p) => p.id !== id));
-  }
+    showMessage(`${produto?.name || "Produto"} removido.`, "error");
+  };
 
-  function aumentarQuantidade(id: number) {
+  const aumentarQuantidade = (id: number) => {
+    
     setProdutos((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, quantity: p.quantity + 1 } : p
-      )
+      prev.map((p) => (p.id === id ? { ...p, quantity: p.quantity + 1 } : p))
     );
-  }
 
-  function diminuirQuantidade(id: number) {
+    const produto = produtos.find((p) => p.id === id)
+
+    showMessage(`Quantidade de ${produto?.name} para (${produto?.quantity})`, "info");
+  };
+
+  const diminuirQuantidade = (id: number) => {
     setProdutos((prev) =>
-      prev
-        .map((p) =>
-          p.id === id ? { ...p, quantity: p.quantity - 1 } : p
-        )
-        .filter((p) => p.quantity > 0)
+      prev.map((p) => {
+        if (p.id === id) {
+          const novaQtde = Math.max(1, p.quantity - 1);
+          if (p.quantity > 1) showMessage("Quantidade diminuída", "info");
+          return { ...p, quantity: novaQtde };
+        }
+        return p;
+      })
     );
-  }
+  };
 
-  function limparCarrinho() {
-    setProdutos([]);
-  }
-
-  const total = useMemo(() => {
-    return produtos.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
-  }, [produtos]);
+  const total = produtos.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
   return (
     <CarrinhoContext.Provider
@@ -93,19 +93,28 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         removerProduto,
         aumentarQuantidade,
         diminuirQuantidade,
-        limparCarrinho,
         total,
       }}
     >
       {children}
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={3000}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert 
+          onClose={handleCloseToast} 
+          severity={toast.severity} 
+          variant="filled" 
+          sx={{ width: "100%", boxShadow: 3 }}
+        >
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </CarrinhoContext.Provider>
   );
-}
+};
 
-export function useCarrinho() {
-  const context = useContext(CarrinhoContext);
-  if (!context) {
-    throw new Error("useCarrinho deve ser usado dentro de CarrinhoProvider");
-  }
-  return context;
-}
+export const useCarrinho = () => useContext(CarrinhoContext);
