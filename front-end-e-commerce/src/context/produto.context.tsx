@@ -24,16 +24,12 @@ export function ProdutoProvider({
     return produtos.reduce<Record<string, Produto[]>>((acc, produto) => {
       const categoryName = produto.category.name;
 
-      
       if (!acc[categoryName]) {
         acc[categoryName] = [];
       }
-      
-      //precisou filtrar as imagens que funcionam no resp da api
-      if (produto.id < 53) {
-        acc[categoryName].push(produto);
-      }
-      
+
+      acc[categoryName].push(produto);
+
       return acc;
     }, {});
   }, [produtos]);
