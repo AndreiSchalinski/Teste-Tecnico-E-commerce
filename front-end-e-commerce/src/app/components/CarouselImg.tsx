@@ -11,7 +11,7 @@ interface CarouselIMGProps {
   images: string[];
 }
 
-const CarouselIMG: React.FC<CarouselIMGProps> = ({ images }) => {
+const CarouselImgs: React.FC<CarouselIMGProps> = ({ images }) => {
   return (
     <Box sx={{ 
       width: "100%", 
@@ -57,4 +57,4 @@ const CarouselIMG: React.FC<CarouselIMGProps> = ({ images }) => {
 
 import { Box } from "@mui/material";
 
-export default CarouselIMG;
+export default CarouselImgs;

@@ -15,7 +15,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { useCarrinho } from "@/context/carrinho.context";
 import { useRouter } from "next/navigation";
-import CarouselIMG from "@/app/components/CarouselImg";
+import CarouselImgs from "@/app/components/CarouselImg";
 
 interface Category {
   id: number;
@@ -36,7 +36,7 @@ interface Props {
   produto: Produto;
 }
 
-export default function ProdutoDetalheView({ produto }: Props) {
+export default function ProdutoDetailing({ produto }: Props) {
   const router = useRouter();
   const { adicionarProduto } = useCarrinho();
 
@@ -76,7 +76,7 @@ export default function ProdutoDetalheView({ produto }: Props) {
               borderColor: "divider",
             }}
           >
-            <CarouselIMG images={produto.images} />
+            <CarouselImgs images={produto.images} />
           </Paper>
         </Grid>
 
@@ -121,7 +121,6 @@ export default function ProdutoDetalheView({ produto }: Props) {
 
             <Divider />
 
-            {/* Ações */}
             <Stack
               direction={{ xs: "column", sm: "row" }}
               spacing={2}

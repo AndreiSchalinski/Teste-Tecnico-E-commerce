@@ -2,7 +2,7 @@
 
 import { useProdutos } from "../../../../context/produto.context";
 import { useParams, notFound } from "next/navigation";
-import ProdutosTableView from "../../components/ProdutoTableView";
+import ProdutoDetailing from "../../components/ProdutoDetail";
 
 export default function ProdutoDetalhePage() {
   const { categoria, id } = useParams();
@@ -15,6 +15,6 @@ export default function ProdutoDetalhePage() {
   }
 
   return (
-    <ProdutosTableView produto={produto}></ProdutosTableView>
+    <ProdutoDetailing produto={produto}></ProdutoDetailing>
   );
 }

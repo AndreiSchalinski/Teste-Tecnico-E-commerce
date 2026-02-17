@@ -14,7 +14,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useCarrinho } from "@/context/carrinho.context";
 import { useRouter } from "next/navigation";
-import CarouselIMG from "@/app/components/CarouselImg";
+import CarouselImgs from "@/app/components/CarouselImg";
 
 interface Produto {
   id: number;
@@ -81,7 +81,7 @@ export default function ProdutosGrid({ produtos = [] }: ProdutosGridProps) {
               <Box
                 sx={{ position: "relative", height: 250, overflow: "hidden" }}
               >
-                <CarouselIMG images={produto.images || []} />
+                <CarouselImgs images={produto.images || []} />
                 <Chip
                   label={produto.category.name}
                   size="small"

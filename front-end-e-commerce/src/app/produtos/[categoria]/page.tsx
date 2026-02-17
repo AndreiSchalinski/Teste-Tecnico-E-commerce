@@ -2,7 +2,6 @@
 
 import { useProdutos } from "../../../context/produto.context";
 import { useParams, notFound } from "next/navigation";
-import ProdutosTableView from "../components/ProdutoTableView";
 import ProdutosGrid from "../components/ProdutosGrid";
 
 const categoriaMap: Record<string, string> = {

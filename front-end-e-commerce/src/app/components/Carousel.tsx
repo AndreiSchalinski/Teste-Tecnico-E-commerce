@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CarouselIMG from "./CarouselImg";
+import CarouselImgs from "./CarouselImg";
 import { useCarrinho } from "@/context/carrinho.context";
 
 export interface Categoria {
@@ -128,7 +128,7 @@ const CarouselSwipper: React.FC<CarouselProps> = ({ slides }) => {
               <Box
                 sx={{ position: "relative", height: 250, overflow: "hidden" }}
               >
-                <CarouselIMG images={slide.images || []} />
+                <CarouselImgs images={slide.images || []} />
                 <Chip
                   label={slide.category.name}
                   size="small"

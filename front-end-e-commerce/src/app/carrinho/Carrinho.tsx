@@ -41,7 +41,7 @@ export default function CarrinhoLista() {
             <Stack direction="row" spacing={2} alignItems="center">
               <Avatar
                 src={produto.image}
-                variant="round"
+                variant="rounded"
                 sx={{
                   width: 70,
                   height: 70,

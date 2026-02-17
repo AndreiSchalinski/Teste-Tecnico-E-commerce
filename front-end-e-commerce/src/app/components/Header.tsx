@@ -1,127 +1,253 @@
 "use client";
 
-import { Menubar } from "primereact/menubar";
-import { Badge } from "primereact/badge";
-import { Avatar } from "primereact/avatar";
-import SidebarCarrinho from "./Sidebar";
-import { useState } from "react";
-import { useCarrinho } from "../../context/carrinho.context";
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Container,
+  Button,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemText,
+  Badge,
+  Drawer,
+  Stack,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import AdbIcon from "@mui/icons-material/Adb";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CloseIcon from "@mui/icons-material/Close";
 
-export default function Header() {
-  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+import { useCarrinho } from "@/context/carrinho.context";
+import CarrinhoLista from "../carrinho/Carrinho";
 
+const storeItems = [
+  { name: "Todas as categorias", path: "/produtos" },
+  { name: "Roupas", path: "/produtos/roupas" },
+  { name: "Eletrônicos", path: "/produtos/eletronicos" },
+  { name: "Mobília", path: "/produtos/mobilia" },
+  { name: "Calçados", path: "/produtos/calcados" },
+  { name: "Variados", path: "/produtos/variados" },
+];
+
+function Header() {
   const { produtos } = useCarrinho();
+  const totalItens = produtos?.length || 0;
 
-  const totalItens = produtos.length
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElStore, setAnchorElStore] = useState<null | HTMLElement>(null);
+  const [openMobileStore, setOpenMobileStore] = useState(false);
 
-  const itemRenderer = (item: any) => (
-    <a
-      className="flex align-items-center p-menuitem-link"
-      href={item.url}
-      onClick={(e) => {
-        if (!item.url) e.preventDefault();
-      }}
-    >
-      <span className={item.icon} />
-      <span className="mx-2">{item.label}</span>
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-      {item.badge > 0 && (
-        <Badge className="ml-auto" value={item.badge} />
-      )}
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) =>
+    setAnchorElNav(event.currentTarget);
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+    setOpenMobileStore(false);
+  };
 
-      {item.shortcut && (
-        <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">
-          {item.shortcut}
-        </span>
-      )}
-    </a>
-  );
+  const handleOpenStoreMenu = (event: React.MouseEvent<HTMLElement>) =>
+    setAnchorElStore(event.currentTarget);
+  const handleCloseStoreMenu = () => setAnchorElStore(null);
 
-  const items = [
-    {
-      label: "Home",
-      icon: "pi pi-home",
-      url: "/",
-    },
-    {
-      label: "Store",
-      icon: "pi pi-shop",
-      items: [
-        {
-          label: "Todos as categorias",
-          icon: "pi pi-bolt",
-          url: "/produtos",
-          template: itemRenderer,
-        },
-        {
-          label: "Roupas",
-          icon: "pi pi-bolt",
-          url: "/produtos/roupas",
-          template: itemRenderer,
-        },
-        {
-          label: "Eletrônicos",
-          icon: "pi pi-server",
-          url: "/produtos/eletronicos",
-          template: itemRenderer,
-        },
-         {
-          label: "Mobília",
-          icon: "pi pi-pencil",
-          shortcut: "⌘+U",
-          url:"/produtos/mobilia",
-          template: itemRenderer,
-        },
-        {
-          label: "Calçados",
-          icon: "pi pi-pencil",
-          shortcut: "⌘+U",
-          url:"/produtos/calcados",
-          template: itemRenderer,
-        },
-        {
-          label: "Variados",
-          icon: "pi pi-pencil",
-          shortcut: "⌘+U",
-          url:"/produtos/variados",
-          template: itemRenderer,
-        },
-      ],
-    },
-    {
-      label: "Carrinho",
-      icon: "pi pi-cart-plus",
-      badge: totalItens,
-      command: () => setShowSidebar(true),
-      template: itemRenderer,
-    },
-  ];
-
-  const start = (
-    <img
-      alt="logo"
-      src="https://primefaces.org/cdn/primereact/images/logo.png"
-      height="40"
-      className="mr-2"
-    />
-  );
-
-  const end = (
-    <div className="flex align-items-center gap-2">
-      <Avatar
-        image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png"
-        shape="circle"
-      />
-    </div>
-  );
+  const toggleCart = (open: boolean) => () => {
+    setIsCartOpen(open);
+  };
 
   return (
     <>
-      <Menubar model={items} start={start} end={end} />
-      <SidebarCarrinho
-        showSidebar={showSidebar}
-        setShowSidebar={setShowSidebar}
-      />
+      <AppBar
+        position="fixed"
+        elevation={2}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          bgcolor: "primary.main",
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {/* LOGO DESKTOP */}
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontWeight: 700,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              <AdbIcon sx={{ mr: 1 }} /> MINHA LOJA
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorElNav}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                disableScrollLock
+              >
+                <MenuItem
+                  component={Link}
+                  href="/"
+                  onClick={handleCloseNavMenu}
+                >
+                  Home
+                </MenuItem>
+
+                <MenuItem onClick={() => setOpenMobileStore(!openMobileStore)}>
+                  <ListItemText primary="Categorias" />
+                  {openMobileStore ? <ExpandLess /> : <ExpandMore />}
+                </MenuItem>
+
+                <Collapse in={openMobileStore} timeout="auto" unmountOnExit>
+                  <List
+                    component="div"
+                    disablePadding
+                    sx={{ bgcolor: "rgba(0,0,0,0.04)" }}
+                  >
+                    {storeItems.map((item) => (
+                      <ListItemButton
+                        key={item.name}
+                        component={Link}
+                        href={item.path}
+                        onClick={handleCloseNavMenu}
+                        sx={{ pl: 4 }}
+                      >
+                        <ListItemText primary={item.name} />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Collapse>
+              </Menu>
+            </Box>
+
+            <Typography
+              variant="h5"
+              noWrap
+              component={Link}
+              href="/"
+              sx={{
+                flexGrow: 1,
+                display: { xs: "flex", md: "none" },
+                fontWeight: 700,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LOJA
+            </Typography>
+
+            <Box
+              sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 1 }}
+            >
+              <Button
+                component={Link}
+                href="/"
+                sx={{ my: 2, color: "white", textTransform: "none" }}
+              >
+                Home
+              </Button>
+
+              <Button
+                sx={{ my: 2, color: "white", textTransform: "none" }}
+                onClick={handleOpenStoreMenu}
+                endIcon={<ExpandMore />}
+              >
+                Store
+              </Button>
+
+              <Menu
+                anchorEl={anchorElStore}
+                open={Boolean(anchorElStore)}
+                onClose={handleCloseStoreMenu}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                disableScrollLock
+              >
+                {storeItems.map((item) => (
+                  <MenuItem
+                    key={item.name}
+                    component={Link}
+                    href={item.path}
+                    onClick={handleCloseStoreMenu}
+                  >
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton
+                color="inherit"
+                onClick={toggleCart(true)}
+                sx={{ ml: 2 }}
+              >
+                <Badge
+                  badgeContent={totalItens}
+                  color="secondary"
+                  showZero={false}
+                >
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+
+      <Drawer
+        anchor="right"
+        open={isCartOpen}
+        onClose={toggleCart(false)}
+        PaperProps={{
+          sx: { width: { xs: "100%", sm: 400 }, maxWidth: "100%" },
+        }}
+      >
+        <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ p: 2, borderBottom: "1px solid #eee" }}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Seu Carrinho ({totalItens})
+            </Typography>
+            <IconButton onClick={toggleCart(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+
+          <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+            <CarrinhoLista />
+          </Box>
+        </Box>
+      </Drawer>
+
+      <Toolbar />
     </>
   );
 }
+
+export default Header;
