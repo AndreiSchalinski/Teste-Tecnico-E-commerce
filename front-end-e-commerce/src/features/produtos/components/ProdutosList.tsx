@@ -1,7 +1,7 @@
 "use client"
 
-import CarouselSwipper from "@/app/components/Carousel";
-import { useProdutos } from "@/context/produto.context";
+import CarouselSwipper from "@/components/layout/Carousel";
+import { useProdutos } from "../context/produto.context";
 
 export default function ProdutosList() {
   const { produtosAgrupados } = useProdutos();

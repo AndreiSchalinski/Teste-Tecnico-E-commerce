@@ -12,7 +12,19 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { useCarrinho } from "@/context/carrinho.context";
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useCarrinho } from "../context/carrinho.context";
+import { useHistorico } from "@/features/historico/context/extrato.context";
+import { useRouter } from "next/navigation";
+
+const slugMap: Record<string, string> = {
+  clothes: "roupas",
+  electronics: "eletronicos",
+  furniture: "mobilia",
+  shoes: "calcados",
+  miscellaneous: "variados",
+};
 
 export default function CarrinhoLista() {
   const {
@@ -20,18 +32,36 @@ export default function CarrinhoLista() {
     aumentarQuantidade,
     diminuirQuantidade,
     removerProduto,
+    limparCarrinho,
     total,
   } = useCarrinho();
+
+  const { finalizarCompra } = useHistorico();
+  const router = useRouter();
 
   if (produtos.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: "center" }}>
+        <ShoppingBagOutlinedIcon
+          sx={{ fontSize: 48, color: "text.disabled", mb: 1 }}
+        />
         <Typography variant="body1" color="text.secondary">
           Seu carrinho está vazio.
         </Typography>
       </Box>
     );
   }
+
+  const handleFinalizarCompra = () => {
+    finalizarCompra(produtos, limparCarrinho);
+  };
+
+  const handleNavegacao = (produto: any) => {
+    const categoriaTraduzida = slugMap[produto.category.slug];
+    if (categoriaTraduzida) {
+      router.push(`/produtos/${categoriaTraduzida}/${produto.id}`);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -55,7 +85,7 @@ export default function CarrinhoLista() {
                   variant="subtitle2"
                   sx={{ fontWeight: "bold", lineHeight: 1.2, mb: 0.5 }}
                 >
-                  {produto.name}
+                  {produto.title}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -106,6 +136,32 @@ export default function CarrinhoLista() {
                   >
                     <DeleteOutlineIcon fontSize="small" />
                   </IconButton>
+
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleNavegacao(produto)}
+                    endIcon={
+                      <ArrowForwardIcon
+                        sx={{ fontSize: "0.85rem !important" }}
+                      />
+                    }
+                    sx={{
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      fontSize: "0.78rem",
+                      py: 0.9,
+                      px: 1.5,
+                      borderColor: "rgba(0,0,0,0.15)",
+                      color: "text.primary",
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        bgcolor: "rgba(0,0,0,0.02)",
+                      },
+                    }}
+                  >
+                    Ver
+                  </Button>
                 </Stack>
               </Box>
             </Stack>
@@ -132,6 +188,7 @@ export default function CarrinhoLista() {
           variant="contained"
           fullWidth
           size="large"
+          onClick={handleFinalizarCompra}
           sx={{
             borderRadius: 2,
             py: 1.5,

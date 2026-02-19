@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useMemo } from "react";
 
-import { Produto } from "../types/interfaces";
+import { Produto } from "@/types/interfaces";
 
 type ProdutoContextType = {
   produtos: Produto[];

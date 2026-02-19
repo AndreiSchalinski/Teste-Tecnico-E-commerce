@@ -1,8 +1,9 @@
 "use client";
 
-import { useProdutos } from "../../../context/produto.context";
+import { useProdutos } from "@/features/produtos/context/produto.context";
 import { useParams, notFound } from "next/navigation";
-import ProdutosGrid from "../components/ProdutosGrid";
+import ProdutosGrid from "@/features/produtos/components/ProdutosGrid";
+import ContainerContent from "../../../components/layout/ContainerContent";
 
 const categoriaMap: Record<string, string> = {
   roupas: "clothes",
@@ -46,18 +47,17 @@ export default function CategoriaPage() {
   };
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center", margin: "40px 0" }}>
-        {tituloCategoria(categoria as string)}
-      </h1>
-
+    <ContainerContent
+      titulo={tituloCategoria(categoria as string)}
+      subtitlo="Catálogo Completo da categoria"
+    >
       <section style={{ width: "90%", margin: "auto" }}>
         {produtosFiltrados.length === 0 ? (
-          <p style={{ textAlign: 'center' }}>Nenhum produto encontrado</p>
+          <p style={{ textAlign: "center" }}>Nenhum produto encontrado</p>
         ) : (
           <ProdutosGrid produtos={produtosFiltrados} />
         )}
       </section>
-    </div>
+    </ContainerContent>
   );
 }

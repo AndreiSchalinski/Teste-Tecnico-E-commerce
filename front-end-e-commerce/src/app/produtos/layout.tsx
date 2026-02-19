@@ -1,4 +1,4 @@
-import { ProdutoProvider } from "../../context/produto.context";
+import { ProdutoProvider } from "@/features/produtos/context/produto.context";
 import { ProdutoService } from "../../services/produto.service";
 
 export default async function ProdutosLayout({
