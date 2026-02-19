@@ -1,12 +1,10 @@
-import ProdutosList from "./components/ProdutosList";
+import ProdutosList from "@/features/produtos/components/ProdutosList";
+import ContainerContent from "../../components/layout/ContainerContent";
 
 export default function TodosProdutosPage() {
   return (
-    <>
-      <h1 style={{ textAlign: "center", margin: "40px 0" }}>
-        Todas as categorias
-      </h1>
+    <ContainerContent titulo="Todas as Categorias" subtitlo="Catálogo Completo">
       <ProdutosList />
-    </>
+    </ContainerContent>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useProdutos } from "../../../../context/produto.context";
+import { useProdutos } from "@/features/produtos/context/produto.context";
 import { useParams, notFound } from "next/navigation";
-import ProdutoDetailing from "../../components/ProdutoDetail";
+import ProdutoDetailing from "@/features/produtos/components/ProdutoDetail";
 
 export default function ProdutoDetalhePage() {
-  const { categoria, id } = useParams();
+  const { id } = useParams();
   const { produtos } = useProdutos();
 
   const produto = produtos.find((p) => p.id === Number(id));
@@ -15,6 +15,8 @@ export default function ProdutoDetalhePage() {
   }
 
   return (
-    <ProdutoDetailing produto={produto}></ProdutoDetailing>
+    <>
+      <ProdutoDetailing produto={produto}></ProdutoDetailing>
+    </>
   );
 }

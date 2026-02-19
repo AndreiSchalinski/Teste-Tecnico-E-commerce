@@ -17,6 +17,18 @@ export interface PageProdutosCategoriasProps {
   }>;
 }
 
+export interface ProdutosGridProps {
+  produtos: Produto[];
+}
+
+export interface ProdutoCardProps {
+  produto: Produto;
+}
+
+export interface DetailProps {
+  produto: Produto;
+}
+
 export interface Categoria {
   id: number;
   name: string;
@@ -26,15 +38,39 @@ export interface Categoria {
   updatedAt: string;
 }
 
-export interface Produto {
+type ProdutoBase = {
   id: number;
-  title: string;
   slug: string;
   price: number;
   description: string;
   category: Categoria;
-  images: string[];
+  images?: string[];
   creationAt: string;
   updatedAt: string;
+  quantity: number;
+};
+
+export type Produto =
+  | (ProdutoBase & { name: string; title?: never })
+  | (ProdutoBase & { title: string; name?: never });
+
+export interface ProdutoCarrinho {
+  id: number;
+  title?: string;
+  price: number;
+  image: string;
+  category: Categoria;
+  quantity: number;
 }
 
+export interface Extrato {
+  produtoCarrinho: ProdutoCarrinho[];
+  total: number;
+  dataCompra: string;
+}
+
+export interface HistoricoContextData {
+  extratos: Extrato[];
+  finalizarCompra: (produtos: ProdutoCarrinho[], onConfirmar: () => void) => void;
+  limparHistorico: () => void;
+}
